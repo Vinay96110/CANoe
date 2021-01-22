@@ -1,0 +1,137 @@
+/*@!Encoding:1252*/
+includes
+{
+  
+}
+
+variables
+{
+  int i=0;
+  const int threshold_speed =50;
+  const int threshold_dist =50;
+}
+
+testfunction SpeedTest_1() // Check for critical condition 
+{
+  write("Inside SpeedTest_1"); 
+  if($speed)//speed is non zero
+  {
+    testStepPass("Test valid, as speed is non zero and ACC is ON");
+    if(($speed < threshold_speed) && ($speed < threshold_speed) )
+    {
+        testStepPass("Criitcal Conditon and speed descreased");
+        testWaitForTimeout(2000);
+        SpeedTest_2();
+     }
+     else
+     {
+        testStepFail("Error in SpeedTest_1");
+     }
+    }  
+  }
+
+testfunction SpeedTest_2() //Check for safe zone,if yes then increase speed
+{
+  write("Inside SpeedTest_2");
+  if($speed)//speed is non zero
+  {
+    testStepPass("Test valid, as speed is non zero and ACC is ON");
+    if($speed > threshold_speed)
+    {
+    // testStepWarning("ignition on, but speed less than threshold");
+     if($distance > threshold_dist)
+     {
+        testStepPass("safe  Conditon and speed increased");
+        testWaitForTimeout(2000);
+        SpeedTest_3();
+     }
+     else
+     {
+        testStepFail("Error in Speedtest_2");
+     }
+    }  
+  }
+}
+
+
+testfunction SpeedTest_3()// check for normal zone to maintain speed w.r.t front vehicle
+{
+  write("Inside SpeedTest_3");
+  if($speed)//speed is non zero
+  {
+    testStepPass("Test valid, as speed is non zero and ACC is ON");
+    if((($speed>threshold_speed) && ($distance<threshold_dist)) ||(($speed<threshold_speed) && ($distance>threshold_dist)))
+     {
+        testStepPass("Normal Zone and speed maintained w.r.t front vehicle");
+        testWaitForTimeout(1000);
+        //testWaitForTimeout(1000);
+        
+     }
+     else
+     {
+        testStepFail("Error in Speedtest_2");
+     }
+    }  
+ 
+}
+
+testcase test_case_1()//ACC Mode ON condition check
+{
+  TestCaseDescription("Test case is used to check the ACC On Condition");
+  write ("inside test_case_1");
+ // putValue(Updatevalue,ACC_MOde);
+  i=$Updatevalue;
+  if(i!=0)
+  {
+    write("ACC Mode is ON");
+    testStepPass("TestCase1 Passed");
+    SpeedTest_1();
+  }
+  else if (i==1)
+  {
+    write("ACC Mode is ofF");
+    //testStepWarning("ACC mode is in off state");
+     testStepFail("TestCase1 Failed");
+  }
+}
+
+testcase test_case_2()//ACC Mode Off condition check
+{
+  TestCaseDescription("Test case is used to check the ACC Off Condition");
+  write ("inside test_case_2");
+ // putValue(Updatevalue,ACC_MOde);
+  i=$Updatevalue;
+  if(i!=1)
+  {
+    write("ACC Mode is OFF");
+    testStepPass("TestCase2 Passed");
+    //SpeedTest_1();
+  }
+  else if (i==1)
+  {
+    write("ACC Mode is ofF");
+     testStepFail("TestCase2 Failed");
+    //testStepWarning("ACC mode is in off state");
+  }
+  
+}
+
+
+
+void MainTest ()
+{
+  // ----- add information to test report 
+
+  TestModuleTitle("Mile Stone CANoe Report"); // change test module title and add description
+  TestModuleDescription("This test module calls some test cases to check its working ");
+  TestModuleDescription("the test features of CANoe.");
+  TestReportAddSUTInfo("Manufactured", "19-12-2020");
+  TestReportAddSUTInfo("Unique ID", "2005038");
+  TestReportAddEngineerInfo("Test Engineer", "Vinay S"); // add info about engineer to report
+//execute test cases
+  test_case_1();
+  test_case_2(); 
+ // test_case_3();
+}
+
+

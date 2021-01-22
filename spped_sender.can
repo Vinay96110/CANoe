@@ -1,0 +1,92 @@
+/*@!Encoding:1252*/
+includes
+{
+  
+}
+
+variables
+{
+  timer Speedvalue1;
+  timer Speedvalue2;
+  timer Speedvalue3;
+  int ACC=0;
+}
+
+on start
+{
+  write("waiting to enter ACC Mode");
+}
+on key'a'
+{ 
+ // ACC=1;
+  write("Radar ready ");
+  $Updatevalue=1;
+ // setControlVisibility("basicpanel","LED Control 1",1);
+ // setControlVisibility("basicpanel","LED Control 1",0);
+  $speed=25; // less that the threshold value
+  $distance=30;
+  setTimer(Speedvalue1,2);
+  setTimer(Speedvalue2,4);
+  setTimer(Speedvalue3,5);
+}
+
+on timer Speedvalue1
+{
+  //if(ACC)
+ /* if(on key 'b')
+  {
+    cancelTimer(Speedvalue1);
+  }*/
+    
+    $speed=65;
+   $distance=60;
+  //else
+  //  $speed=0;
+ setTimer(Speedvalue1,2);
+}
+
+on timer Speedvalue2
+{
+  //if(ACC)
+ /* if('b')
+  {
+    cancelTimer(Speedvalue2);
+  }*/
+  $speed=25;
+  $distance=40;
+// else
+ //   $speed=0;
+ setTimer(Speedvalue2,4);
+}
+on timer Speedvalue3
+{
+  //if(ACC)
+ /*  if('b')
+  {
+    cancelTimer(Speedvalue2);
+  }*/
+   $speed=65;
+  $distance=40;
+// else
+ //   $speed=0;
+ setTimer(Speedvalue3,5);
+}
+on stopMeasurement
+{
+  $speed=0;
+  $distance=0;
+}
+
+on key'b'
+{
+  $speed=0;
+  $distance=0;
+  //setControlVisibility("basicpanel","LED Control 1",0); 
+  //setControlVisibility("basicpanel","LED Control 1",1);
+  $Updatevalue=0;
+  write("break applied"); 
+  cancelTimer(Speedvalue1);
+  cancelTimer(Speedvalue2);
+  cancelTimer(Speedvalue3);
+ }
+

@@ -1,0 +1,66 @@
+/*@!Encoding:1252*/
+includes
+{
+  
+}
+
+variables
+{
+ // timer Spdtimr;
+  const int threshold_speed =50;
+  const int threshold_dist =50;
+}
+on start
+{
+  write("ECU is calculating");
+}
+/*on message CArSpeedValue
+{
+  write("calculating.../");
+  if($speed<threshold_speed)
+  {
+    write("car speed is decreased");
+  }
+  else if($speed>threshold_speed)
+  {
+      write("Car speed is increased");
+  }
+  else
+   {
+    write("Error condition");
+  }
+ }*/
+
+on message CArSpeedValue
+{
+  write("Calculating***");
+  if(($speed>threshold_speed) && ($distance>threshold_dist))
+  {
+   // write("Vehicle is in Safe Zone and Speed is incrased");
+    write("Safe Zone A");
+    write("Speed increased");
+  }
+  else if(($speed<threshold_speed) && ($distance<threshold_dist))
+  {
+    //write("Vehicle is in Critical Zone and Speed is descresed");
+    write("Critical Zone");
+    write("Speed descreased");
+  }
+  else if((($speed>threshold_speed) && ($distance<threshold_dist)) ||(($speed<threshold_speed) && ($distance>threshold_dist)))
+  {
+    //write("vehicle is in Safe zone and spped is maintained with respect to front vehicle");
+    write("normal Zone");
+    write("Speed maintained w.r.t front_vehicle");
+   }
+ }
+    
+  
+
+on stopMeasurement
+{
+  write("Radar inactive");
+  write("ecu stopped reciving data");
+}
+  
+    
+    
